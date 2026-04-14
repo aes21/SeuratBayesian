@@ -6,6 +6,6 @@
 \alias{SeuratBayesian-package}
 \title{SeuratBayesian: Bayesian Differential Expression for Seurat via ZINB Models}
 \description{
-Provides zero-inflated negative bionomial (ZINB) Bayesian modelling for single-cell RNA-seq data stored as Seurat objects.
+Provides zero-inflated negative binomial (ZINB) Bayesian modelling for single-cell RNA-seq data stored as Seurat objects.
 }
 \keyword{internal}
