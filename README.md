@@ -70,12 +70,12 @@ lp_approx__      -1.9977503 1.40918513  -5.5777273 -0.2784322
 ```
 
 ### Visualising posterior distributions
-The whole workflow (model fit to posterior distribution of log fold-change can be completed using the `VlnPlot_Bayesian()` wrapper function.
+The whole workflow (model fit to posterior distribution of log fold-change) can be completed using the `VlnPlot_Bayesian()` wrapper function.
 
 ```r
 VlnPlot_Bayesian(mono, feature = gene_of_interest, group.by = "stim", ctr.ident = "CTRL")
 ```
 
-![Plot](SeuratBayesian_example.png)
+![Plot](SeuratBayesian_plot.png)
 
 The violin plot shows the posterior distribution of log fold-change for each group against the defined control. The control group is shown with a log fold-change fixed at 0 (as the reference level). Please see the model vignette for justification of the model formula and prior consturction.
