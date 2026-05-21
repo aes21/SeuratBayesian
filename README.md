@@ -2,10 +2,10 @@
 
 Bayesian differential expression for single-cell RNA-sequencing data via zero-inflated negative binomial (ZINB) models.
 
-The package wraps Bayesian ZINB modelling for scRNA-seq data stored as Seurat objects using `brms`. It is intended for targeted, gene-level characterisation where standard differential expression screening (Wilcoxon rank-sum, DESeq2, edgeR) returns ambiguous results or where the understanding the mechanism behind an expression difference is important.
+The package wraps Bayesian ZINB modelling for scRNA-seq data stored as Seurat objects using `brms`. It is intended for targeted, gene-level characterisation where standard differential expression screening (Wilcoxon rank-sum, DESeq2, edgeR) returns ambiguous results or where understanding the mechanism behind a significant expression difference is important.
 
 ## Why?
-Other than a interesting application of Bayesian modelling in the biological field, the standard differential expression tools outlined above return a log-fold change and p-value. However, these values do not tell you why the counts differ between the conditions. scRNA-seq count data has two sources of 0 reads:
+Other than a interesting application of Bayesian modelling in the biological field, the standard differential expression tools return a log-fold change and p-value. However, these values do not tell you why the counts differ between conditions. scRNA-seq count data has two sources of 0 reads:
 
 - **Biological Zeros**: The gene is genuinely not expressed.
 - **Technical Dropouts**: Gene expression not captured.
