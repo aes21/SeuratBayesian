@@ -2,15 +2,15 @@
 
 Bayesian differential expression for single-cell RNA-sequencing data via zero-inflated negative binomial (ZINB) models.
 
-The package wraps Bayesian ZINB modelling for scRNA-seq data stored as Seurat objects using `brms`. It is intended as an alternative to Seurat's default (non-genome wide) differential expression screening (Wilcoxon rank-sum, DESeq2 or edgeR wrappers).
+The package wraps Bayesian ZINB modelling for scRNA-seq data stored as Seurat objects using `brms`. It is intended for targeted, gene-level characterisation where standard differential expression screening (Wilcoxon rank-sum, DESeq2, edgeR) returns ambiguous results or where the understanding the mechanism behind an expression difference is important.
 
 ## Why?
-Other than a interesting application of Bayesian modelling in the biological field, scRNA-seq count data has two sources of 0 reads:
+Other than a interesting application of Bayesian modelling in the biological field, the standard differential expression tools outlined above return a log-fold change and p-value. However, these values do not tell you why the counts differ between the conditions. scRNA-seq count data has two sources of 0 reads:
 
 - **Biological Zeros**: The gene is genuinely not expressed.
 - **Technical Dropouts**: Gene expression not captured.
 
-Where a candidate gene is difficult to characterise across highly similar, small groups, this tool provides a full posterior distribution around the gene's fold change for a more rigorous evaluation of expression differences.
+Where a gene shows a large shift in the proportion of cells expressing it - not just in the level of observed expression, standard differential expression analysis conflates these two signals. The proposed ZINB model separates them with a negative binomial component for expression level, and a zero-inflation component for the probability of a structural zero. This decomposition gives a more complete picture of what is actually changing between conditions.
 
 ## Installation
 
@@ -26,7 +26,7 @@ devtools::install_github("aes21/SeuratBayesian")
 ```
 
 ## Quick Start
-The following example uses the `ifnb` dataset from the SeuratData package. Using a subset of CD14+ monocytes, we display how applying SeuratBayesian highlights key expression differences in CD14. 
+The following example uses the `ifnb` dataset from the SeuratData package. Using a subset of CD14+ monocytes, we examine what the ZINB model reveals about the expression of CD14 under stimulation treatment.
 
 ```r
 library(Seurat)
@@ -34,18 +34,26 @@ library(SeuratBayesian)
 library(SeuratData)
 
 InstallData("ifnb")
-```
-
-### Fit the model to a gene
-To enable an "open-ended" analysis of log fold-change posterior distribution calculated by the fit model for the provided gene, the `sc_fit_bayesian()` function (see below for visualisation function wrapping) returns the standard `brms` fit object.
-
-```r
-# load the Seurat object
 data("ifnb")
 
-# subset for specific cell group
+# subset for CD14+ monocyte cell group
 mono <- subset(ifnb, subset = seurat_annotations == "CD14 Mono")
 
+# standard DE approach (Wilcoxon rank sum test)
+FindMarkers(mono, feature = "CD14", ident.1 = "STIM", verbose = FALSE)
+```
+
+```
+             p_val avg_log2FC pct.1 pct.2     p_val_adj
+CD14 9.881313e-323  -2.825997 0.253 0.784 1.388621e-318
+```
+
+In this scenario, standard differential analysis captures the direction and size of CD14 expression changes (near-zero p-value and large log fold-change across the stimulated group), but cannot tell you whether the significant drop in detection rates (78% in CTRL to 25% in STIM) reflects suppressed transcription across all cells, a subpopulation switching off, or increased technical dropout as a result of the treatment. The posterior characterises both the expression level shift and the zero-inflation structure simultaneously, providing a more informative answer than a p-value alone.
+
+### Fit the model to a gene
+The `sc_fit_bayesian()` function returns a standard `brms` fit object, giving direct access to the full suite of brms diagnostics and posterior tools for custom downstream analysis.
+
+```r
 # fit model
 fit <- sc_fit_bayesian(
   object = mono,
@@ -55,8 +63,9 @@ fit <- sc_fit_bayesian(
 )
 
 # downstream brms tools to evaluate fit
-posterior_summary(fit)
+brms::posterior_summary(fit)
 ```
+
 ```
                    Estimate  Est.Error        Q2.5      Q97.5
 b_Intercept      -6.4641956 0.04050887  -6.5386461 -6.3821472
@@ -68,6 +77,10 @@ Intercept_zi     -4.2316024 0.65323779  -5.4748927 -2.9132264
 lprior          -11.0757485 1.22774904 -13.7458231 -8.8887714
 lp_approx__      -1.9977503 1.40918513  -5.5777273 -0.2784322
 ```
+
+- **b_Intercept**: Baseline log expression level in the control identity, in this case reflecting the sparisty of CD14 counts.
+- **b_zi_Intercept**: The probability of a structural 0 from the ZINB component across the conditions. A 1.4% low value (`plogis(-4.23)`) indicates the 0 reads of CD14 counts are largely explained by a genuine reduction of expression, as opposed to dropouts and reflects a true, biological suppression.
+- **b_conditionSTIM**: Posterior log fold-change of STIM vs. CTRL, mimics the observed downregulation observed using the Wilcoxon rank sum test.
 
 ### Visualising posterior distributions
 The whole workflow (model fit to posterior distribution of log fold-change) can be completed using the `VlnPlot_Bayesian()` wrapper function.
