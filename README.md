@@ -1,11 +1,11 @@
 # SeuratBayesian
 
-Bayesian differential expression for single-cell RNA-sequencing data via zero-inflated negative bionomial (ZINB) models.
+Bayesian differential expression for single-cell RNA-sequencing data via zero-inflated negative binomial (ZINB) models.
 
 The package wraps Bayesian ZINB modelling for scRNA-seq data stored as Seurat objects using `brms`. It is intended as an alternative to Seurat's default (non-genome wide) differential expression screening (Wilcoxon rank-sum, DESeq2 or edgeR wrappers).
 
 ## Why?
-Other than a interesting application of Bayesian modelling in the biologcal field, scRNA-seq count data has two sources of 0 reads:
+Other than a interesting application of Bayesian modelling in the biological field, scRNA-seq count data has two sources of 0 reads:
 
 - **Biological Zeros**: The gene is genuinely not expressed.
 - **Technical Dropouts**: Gene expression not captured.
@@ -14,7 +14,7 @@ Where a candidate gene is difficult to characterise across highly similar, small
 
 ## Installation
 
-SeuratBayesian requires a working Stan installation. You **must** install `cmdstandr` before executing the workflow. This allows models to compile to C++ on the first run and reduce subsequent computational load.
+SeuratBayesian requires a working Stan installation. You **must** install `cmdstanr` before executing the workflow. This allows models to compile to C++ on the first run and reduce subsequent computational load.
 
 ```r
 # install Stan
@@ -78,4 +78,4 @@ VlnPlot_Bayesian(mono, feature = gene_of_interest, group.by = "stim", ctr.ident 
 
 ![Plot](SeuratBayesian_plot.png)
 
-The violin plot shows the posterior distribution of log fold-change for each group against the defined control. The control group is shown with a log fold-change fixed at 0 (as the reference level). Please see the model vignette for justification of the model formula and prior consturction.
+The violin plot shows the posterior distribution of log fold-change for each group against the defined control. The control group is shown with a log fold-change fixed at 0 (as the reference level). Please see the model vignette for justification of the model formula and prior construction.
