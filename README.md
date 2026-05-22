@@ -86,7 +86,7 @@ lp_approx__      -1.9977503 1.40918513  -5.5777273 -0.2784322
 The whole workflow (model fit to posterior distribution of log fold-change) can be completed using the `VlnPlot_Bayesian()` wrapper function.
 
 ```r
-VlnPlot_Bayesian(mono, feature = gene_of_interest, group.by = "stim", ctr.ident = "CTRL")
+VlnPlot_Bayesian(mono, feature = "CD14", group.by = "stim", ctr.ident = "CTRL")
 ```
 
 ![Plot](SeuratBayesian_plot.png)
