@@ -79,8 +79,8 @@ lp_approx__      -1.9977503 1.40918513  -5.5777273 -0.2784322
 ```
 
 - **b_Intercept**: Baseline log expression level in the control identity, in this case reflecting the sparisty of CD14 counts.
-- **b_zi_Intercept**: The probability of a structural 0 from the ZINB component across the conditions. A 1.4% low value (`plogis(-4.23)`) indicates the 0 reads of CD14 counts are largely explained by a genuine reduction of expression, as opposed to dropouts and reflects a true, biological suppression.
-- **b_conditionSTIM**: Posterior log fold-change of STIM vs. CTRL, mimics the observed downregulation observed using the Wilcoxon rank sum test.
+- **b_zi_Intercept**: The probability of a structural 0 in the control group (`ctr.ident`). A 1.4% low value (`plogis(-4.23)`) indicates the 0 reads of CD14 counts are largely explained by a genuine reduction of expression, as opposed to dropouts and reflects a true, biological suppression.
+- **b_conditionSTIM**: The change in log-odds of a structural 0 in the treatment group(s) relative to the control (`ctr.ident`). If this value is close to 0 with a tight credible interval, the model is directly telling you that dropout probability is not changing between conditions. The detection rate drop from 78% to 25% is biological suppression, not a technical artefact of the stimulation. If it is meaningfully non-zero, the two signals need to be disentangled.
 
 ### Visualising posterior distributions
 The whole workflow (model fit to posterior distribution of log fold-change) can be completed using the `VlnPlot_Bayesian()` wrapper function.
