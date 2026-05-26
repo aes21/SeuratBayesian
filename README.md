@@ -135,4 +135,6 @@ VlnPlot_Bayesian(mono, feature = "CD14", group.by = "stim", ctr.ident = "CTRL")
 
 ![Plot](SeuratBayesian_plot.png)
 
-The top panel details the standard `Seurat::VlnPlot()` output to visual group expression differences across the two treatment groups. The left panel shows the posterior distribution of log fold-change for STIM versus the control reference (fixed at 0). The right panel shows the posterior density of the structural zero probability for each condition. Please see the model vignette for justification of the model formula and prior construction.
+The top panel details the standard `Seurat::VlnPlot()` output to visual group expression differences across the two treatment groups. The left panel shows the posterior distribution of log fold-change for STIM versus the control reference (fixed at 0). The right panel shows the posterior density of the structural zero probability for each condition. 
+
+Please see the model vignette for justification of the model formula and prior construction.
