@@ -28,7 +28,7 @@
 #' @examples
 #' \dontrun{
 #' data("pbmc_small")
-#' fit <- (object = pbmc_small, feature = "LYZ", group.by = "groups", ctr.ident = "g1")
+#' fit <- sc_fit_bayesian(object = pbmc_small, feature = "LYZ", group.by = "groups", ctr.ident = "g1")
 #' }
 #'
 #' @export
@@ -175,13 +175,12 @@ VlnPlot_Bayesian <- function(
     ) +
     labs(
       title = feature,
-      subtitle = "Posterior log fold-change vs control",
       x = NULL,
       y = "Log Fold-Change"
     ) +
     theme_classic(base_size = 12) +
     theme(
-      plot.title = element_text(face = "italic"),
+      plot.title = element_text(face = "bold"),
       legend.position = "none",
       axis.text.x = element_text(angle = 45, hjust = 1)
     )
